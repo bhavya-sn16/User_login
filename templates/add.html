@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card mt-5" hx-post="{{url_for('add_user')}}" hx-target="this" hx-swap="innerHTML">
+    <div class="card-body">
+        
+    <form method = 'POST' hx-post="{{url_for('add_user')}}">
+        {{ form.hidden_tag() }}
+        {{ form.name.label(class="form-group") }}
+        {{ form.name(class="form-control") }}
+        {{ form.email.label(class="form-group") }}
+        {{ form.email(class="form-control") }}
+        {{ form.contactno.label(class="form-group") }}
+        {{ form.contactno(class="form-control") }}
+        <br><br>
+        {{form.submit(class="btn btn-success btn-sm")}}
+        {{form.cancel(class="btn btn-success btn-sm" )}}
+        
+    </form>
+{% for message in get_flashed_messages() %}
+    <div class="alert alert-success" role="alert">
+     {{message}}
+    </div>
+{% endfor %}
+{% if name %}
+	<h1>User Added!</h1>
+	<br/><br/>
+{% endif %}    
+    </div>
+</div>
+{% endblock %}

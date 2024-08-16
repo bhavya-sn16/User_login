@@ -26,6 +26,43 @@ class LoginForm(FlaskForm):
     password = PasswordField("Enter password", validators=[DataRequired()])
     submit = SubmitField("Submit", validators=[DataRequired()])
 
+class AddUser(FlaskForm):
+    name= StringField("Enter your name", validators=[DataRequired()])
+    email = StringField("Enter e-mail id", validators=[DataRequired()])
+    contactno =StringField("Your Contact number", validators=[DataRequired()])
+    submit = SubmitField("Add", validators=[DataRequired()])
+    cancel = SubmitField("Cancel", validators=[DataRequired()])
+
+
+@app.route('/add_user',methods = ['GET','POST'])
+def add_user():
+     print("***")
+     print("5555555")
+    #  name = None
+     form = AddUser()
+     name= form.name.data
+     print(name)
+     if request.method == 'POST':
+          user = User.query.filter_by(email = form.email.data).first()
+          if user is None:
+               user = User(first_name=form.name.data, email=form.email.data, contact_no= form.contactno.data,
+                             password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
+                             updated_by="Hogwarts")
+               db.session.add(user)
+               db.session.commit()
+               flash("User added successfully")
+            #    user_list = User.query.all()
+            #    return redirect(url_for('users'))
+          else:
+             flash("User already exists")
+
+          form.name.data=''
+          form.email.data=''
+          form.contactno.data=''
+
+     return render_template('add.html', name= name, form = form )
+             
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
