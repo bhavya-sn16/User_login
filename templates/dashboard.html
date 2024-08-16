@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="position-relative">
+<div class="position-absolute top-0 end-0" >
+
+    <h2>Administration</h2>
+
+    
+</div>
+
+<div>
+    <div class="card" style="width: 5rem;">
+        <img src="{{ url_for('static', filename='images/images.png') }}" class="card-img-top">
+        <div class="card-body">
+            <a href="{{url_for('users')}}" class="card-link">Users</a>
+        </div>
+      </div>
+</div>
+
+</div>
+
+
+{% endblock %}
