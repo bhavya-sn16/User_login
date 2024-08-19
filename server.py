@@ -60,7 +60,7 @@ def add_user():
           form.email.data=''
           form.contactno.data=''
 
-     return render_template('add.html', name= name, form = form )
+     return render_template('partials/add.html', name= name, form = form )
              
 
 @login_manager.user_loader
@@ -103,6 +103,12 @@ def users():
 # @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route("/show/table")
+def show_post():
+    print("jjjjjjj")
+    post = User.query.all()
+    return render_template('partials/show.html', post=post)
 
 class User(db.Model, UserMixin):  
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)

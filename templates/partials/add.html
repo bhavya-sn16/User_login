@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card mt-5" hx-post="{{url_for('add_user')}}" hx-target="this" hx-swap="innerHTML">
+<div class="card mt-5" hx-post="{{url_for('show_post')}}" hx-target="this" hx-swap="outerHTML">
     <div class="card-body">
         
     <form method = 'POST' hx-post="{{url_for('add_user')}}">
@@ -13,7 +13,9 @@
         {{ form.contactno(class="form-control") }}
         <br><br>
         {{form.submit(class="btn btn-success btn-sm")}}
-        {{form.cancel(class="btn btn-success btn-sm" )}}
+        <div>
+            {{form.cancel(class="btn btn-success btn-sm" )}}
+        </div>
         
     </form>
 {% for message in get_flashed_messages() %}
