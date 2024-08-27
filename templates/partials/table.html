@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<head>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.1.3/css/dataTables.bootstrap5.css" rel="stylesheet">
+   <style>
+    		[x-cloak] { display: none; }
+   </style>
+
+</head>
+<body style="background-color: rgba(100, 109, 106, 0.734);">
+
+<div id="example1" class="container my-5" >
+    <div>
+
+    <h1 class="text-center mb-4">User List</h1>
+</div>
+
+
+
+<div>
+		
+    <button
+        x-data="{usedKeyboard: false}"
+        @keydown.window.tab="usedKeyboard = true"
+        role=button
+        @click="$dispatch('open-menu', { open: true })"
+        :class="{'focus:outline-none': !usedKeyboard}"
+        class="btn btn-primary" style="float: right;">
+        Add User
+    </button>
+    
+</div>
+
+
+<section
+x-data="slideout()"
+x-cloak
+@open-menu.window="open = $event.detail.open"
+@keydown.window.tab="usedKeyboard = true"
+@keydown.escape="open = false"
+x-init="init()" style="position: absolute; z-index: 1000;">
+<div
+    x-show.transition.opacity.duration.500="open"
+    @click="open = false"
+    class="fixed inset-0 bg-black bg-opacity-25"></div>
+<div
+    class="fixed transition duration-300 right-0 top-0 transform w-full max-w-xs h-screen bg-gray-100 overflow-hidden"
+    :class="{'translate-x-full': !open}">
+    <button hx-get="{{ url_for('add_user') }}" hx-target="#part" hx-swap="outerHTML"
+        @click="open = false"
+        x-ref="closeButton"
+        :class="{'focus:outline-none': !usedKeyboard}"
+        class="fixed top-0 right-0 mr-4 mt-2 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;" >
+<div class="card mt-5">
+    <div id="loginform" class="container-fluid">
+        
+    <form method="POST" action="{{ url_for('add_user') }}" hx-get="{{url_for('users')}}" hx-target="#example1" hx-swap="outerHTML">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="contactno">Contact Number</label>
+            <input type="text" class="form-control" id="contactno" name="contactno" required>
+        </div>
+        <br>
+        <div >
+            <button type="submit" class="btn btn-success btn-sm">Submit</button>
+        </div>
+        <br>
+        <div>
+        </div>
+    </form>
+    
+</div>
+</section>
+
+
+<!-- Dev tools -->
+<div
+id="alpine-devtools"
+x-data="devtools('left')"
+x-show="alpines.length"
+x-init="start()">
+</div>
+    <div id="example2" class="table-responsive" class="container-fluid">
+        <div id="exxx"></div>
+    <table id="example" class="table table-striped table-bordered" style="width:100%"  style="position: absolute; z-index: -1000;">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Email</th>
+                <th>Contact No</th>
+                <th>Company</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            {% for user in users %}
+            <tr class="border border-black">
+                <td>{{ user.first_name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.contact_no }}</td>
+                <td>{{ user.company.name}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    </div>
+</div>
+</div>
+</div>
+</body>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.3/js/dataTables.bootstrap5.js"></script>
+    <script>
+        new DataTable('#example');
+    </script>
+    <script>
+        function slideout() {
+	return {
+		open: false,
+		usedKeyboard: false,
+		init() {
+			this.$watch('open', value => {
+				value && this.$refs.closeButton.focus()
+				this.toggleOverlay()
+			})
+			this.toggleOverlay()
+		},
+		toggleOverlay() {
+			document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden')
+		}
+	}
+}
+    </script>
+   
+
+
+
+
+
+
+
+{% endblock %}

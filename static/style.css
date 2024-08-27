@@ -1,0 +1,109 @@
+    .dash
+    {
+        min-height: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+        display: block;
+    }
+    html,
+    body {
+        height: 100%;
+    }
+    body {
+        height: -moz-calc(100% - 113px);
+        height: -webkit-calc(100% - 113px);
+        height: calc(100% - 113px);
+    }
+
+    
+    body {
+        background: #535856c1;
+    }
+
+    
+    h2 {
+        font-size: 2.5rem; 
+        font-weight: bold;
+    }
+
+
+    .form {
+        width: 460px;
+        margin: 10px auto 0 auto;
+        padding-top: 40px;
+        padding-bottom: 20px;
+        background: #f9d8c5;
+        border: 1px solid #726f6f;
+    }
+    .form-horizontal .control-label {
+        font-size: 18px;
+        width: 160px;
+        font-family: 'OpenSansBold';
+        color: #A0A0A0;
+        padding-top: 9px;
+    }
+    .form-horizontal .controls {
+        margin-left: 180px;
+    }
+    input {
+        font-size: 18px;
+        font-family: 'OpenSansBold';
+        height: 27px;
+    
+    }
+    input:focus {
+        border:  0 0 2px 0 solid green ;
+     }
+
+     input:hover {
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.94);
+    }
+
+    .btn {
+        margin-left: 10px;
+        margin-top: 7px;
+        font-size: 16px;
+        font-family: 'OpenSansBold';
+        padding: 5px 15px 10px 15px;
+    }
+    .btn i {
+        width: 20px;
+        margin-top: 5px;
+    }
+    .form span.required {
+        color: #e6bfbf;
+    }
+    table, th, td {
+        border-left: none;
+        border-right: none;
+      }
+
+      .example thead tr {
+        background-color: #6a6363;
+        color: #ffffff;
+        text-align: left;
+        font-weight: bold;
+    }
+    
+    .example  th,
+    .example  td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #dddddd;
+    }
+    
+    .example  tbody tr {
+        background-color: #ffffff;
+        border-bottom: 1px solid #dddddd;
+    }
+    
+    .example  tbody tr:last-of-type {
+        border-bottom: 2px solid #333;
+    }
+
+    h1 {
+        font-size: 36px; 
+    }
+      
+
+

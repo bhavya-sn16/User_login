@@ -8,6 +8,8 @@ from sqlalchemy.orm import relationship, Mapped, MappedColumn, mapped_column,bac
 from datetime import datetime,timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from jinja_partials import render_partial
+
 
 
 
@@ -25,13 +27,13 @@ class LoginForm(FlaskForm):
     username= StringField("Enter Username", validators=[DataRequired()])
     password = PasswordField("Enter password", validators=[DataRequired()])
     submit = SubmitField("Submit", validators=[DataRequired()])
+    
 
 class AddUser(FlaskForm):
     name= StringField("Enter your name", validators=[DataRequired()])
     email = StringField("Enter e-mail id", validators=[DataRequired()])
     contactno =StringField("Your Contact number", validators=[DataRequired()])
     submit = SubmitField("Add", validators=[DataRequired()])
-    cancel = SubmitField("Cancel", validators=[DataRequired()])
 
 
 @app.route('/add_user',methods = ['GET','POST'])
@@ -41,7 +43,7 @@ def add_user():
     #  name = None
      form = AddUser()
      name= form.name.data
-     print(name)
+     print(name)  
      if request.method == 'POST':
           user = User.query.filter_by(email = form.email.data).first()
           if user is None:
@@ -51,8 +53,8 @@ def add_user():
                db.session.add(user)
                db.session.commit()
                flash("User added successfully")
-            #    user_list = User.query.all()
-            #    return redirect(url_for('users'))
+               user_list = User.query.all()
+               return redirect(url_for('users'))
           else:
              flash("User already exists")
 
@@ -60,7 +62,7 @@ def add_user():
           form.email.data=''
           form.contactno.data=''
 
-     return render_template('partials/add.html', name= name, form = form )
+     return render_template('partials/_add.html', name= name, form = form )
              
 
 @login_manager.user_loader
@@ -80,7 +82,7 @@ def login():
 
     #  if form.validate_on_submit():
       
-        # user = User.query.filter_by(email=form.username.data).first()
+    #  user = User.query.filter_by(email=form.username.data).first()
      if form.username.data == 'admin@123' and  form.password.data == 'admin':
             
                 # login_user(user)
@@ -90,16 +92,16 @@ def login():
                 flash("Wrong Password")
     else:
             flash("The user does'nt exist")
-    return render_template('login.html',form=form)    
+    return render_template('partials/login.html',form=form)    
 
-@app.route('/users')
+@app.route('/users',methods=['GET', 'POST'] )
 # @login_required
 def users():
     user_list = User.query.all()
-    return render_template('table.html', users=user_list)
+    return render_template('partials/table.html', users=user_list)
 
 
-@app.route('/dashboard')
+@app.route('/dashboard',methods=['GET', 'POST'] )
 # @login_required
 def dashboard():
     return render_template('dashboard.html')

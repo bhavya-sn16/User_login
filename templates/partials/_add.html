@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="card mt-5" hx-post="{{url_for('show_post')}}" hx-target="this" hx-swap="outerHTML">
-    <div class="card-body">
+<div class="card mt-5">
+    <div id="loginform" class="card-body">
         
-    <form method = 'POST' hx-post="{{url_for('add_user')}}">
+    <form method = 'POST' hx-post="{{url_for('add_user')}}" >
         {{ form.hidden_tag() }}
         {{ form.name.label(class="form-group") }}
         {{ form.name(class="form-control") }}
@@ -12,21 +12,28 @@
         {{ form.contactno.label(class="form-group") }}
         {{ form.contactno(class="form-control") }}
         <br><br>
+        <div hx-get="{{url_for('users')}}" hx-target="#example1" hx-swap="innerHTML">
         {{form.submit(class="btn btn-success btn-sm")}}
-        <div>
-            {{form.cancel(class="btn btn-success btn-sm" )}}
+        <br>
+        <br>
+    </div>
+    <br>
+        <div hx-get="{{url_for('users')}}" hx-target="#example1" hx-swap="innerHTML">
+            {{form.cancel(class="btn btn-secondary btn-sm" )}}
         </div>
         
     </form>
-{% for message in get_flashed_messages() %}
+    
+    {% if message in get_flashed_messages() %}
     <div class="alert alert-success" role="alert">
      {{message}}
     </div>
-{% endfor %}
+{% endif %}
 {% if name %}
 	<h1>User Added!</h1>
 	<br/><br/>
 {% endif %}    
     </div>
+   
 </div>
 {% endblock %}
