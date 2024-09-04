@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, url_for,flash,redirect
+from flask import Flask, render_template,request, url_for,flash,redirect,jsonify,send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField,PasswordField,BooleanField,ValidationError
@@ -9,7 +9,7 @@ from datetime import datetime,timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from jinja_partials import render_partial
-
+from flask_migrate import Migrate
 
 
 
@@ -18,6 +18,8 @@ app  = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SECRET_KEY'] = "keysecret"
 db = SQLAlchemy(app)
+
+migrate = Migrate(app, db)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -52,9 +54,11 @@ def add_user():
                              updated_by="Hogwarts")
                db.session.add(user)
                db.session.commit()
+               users = User.query.all()
+            #    users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
                flash("User added successfully")
-               user_list = User.query.all()
-               return redirect(url_for('users'))
+               
+               return render_template('partials/newtable1.html',users = users)
           else:
              flash("User already exists")
 
@@ -63,7 +67,32 @@ def add_user():
           form.contactno.data=''
 
      return render_template('partials/_add.html', name= name, form = form )
-             
+
+
+@app.route('/update/<int:user_id>',methods = ['GET','POST'])
+def update(user_id):
+    print("blablabla")
+    form = AddUser()
+    name_to_update = User.query.get_or_404(user_id)
+    users = User.query.all()
+    print(f"Fetched user: {name_to_update}")
+    if request.method == "POST":
+        name_to_update.first_name = request.form["name"]
+        name_to_update.email = request.form["email"]
+        name_to_update.contact_no = request.form["contactno"]
+        try:
+            db.session.commit()
+            
+            flash("User Updated")
+            return render_template('partials/newtable1.html',users = users, name_to_update = name_to_update)
+        except:
+            flash("There is some kind of error")
+            return render_template('partials/newtable1.html',users = users, name_to_update= name_to_update)
+        
+    else:
+        return render_template('partials/newtable1.html',users = users, name_to_update= name_to_update)  
+
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -98,7 +127,27 @@ def login():
 # @login_required
 def users():
     user_list = User.query.all()
-    return render_template('partials/table.html', users=user_list)
+    return render_template('partials/newtable1.html', users=user_list)
+
+
+@app.route("/search")
+def search():
+    q = request.args.get("q")
+    print(q)
+
+    if q:
+        results = User.query.filter(User.first_name.icontains(q) | User.email.icontains(q)) \
+        .order_by(User.first_name.asc()).limit(100).all()
+    else:
+        results = []
+
+    return render_template("search_results.html", results=results)
+
+@app.route("/reload")
+def reload():
+   q = db.query(User).order_by(User.id)
+   results = q.all()
+   return render_template("search_results.html", results=results)
 
 
 @app.route('/dashboard',methods=['GET', 'POST'] )
