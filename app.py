@@ -48,6 +48,7 @@ def add_user():
      print(name)  
      if request.method == 'POST':
           user = User.query.filter_by(email = form.email.data).first()
+          print("bla")
           if user is None:
                user = User(first_name=form.name.data, email=form.email.data, contact_no= form.contactno.data,
                              password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
@@ -58,7 +59,7 @@ def add_user():
             #    users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
                flash("User added successfully")
                
-               return render_template('partials/newtable1.html',users = users)
+               return render_template('partials/new_table1.html',users = users)
           else:
              flash("User already exists")
 
@@ -84,13 +85,13 @@ def update(user_id):
             db.session.commit()
             
             flash("User Updated")
-            return render_template('partials/newtable1.html',users = users, name_to_update = name_to_update)
+            return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
         except:
             flash("There is some kind of error")
-            return render_template('partials/newtable1.html',users = users, name_to_update= name_to_update)
+            return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
         
     else:
-        return render_template('partials/newtable1.html',users = users, name_to_update= name_to_update)  
+        return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
 
 
 
@@ -127,7 +128,7 @@ def login():
 # @login_required
 def users():
     user_list = User.query.all()
-    return render_template('partials/newtable1.html', users=user_list)
+    return render_template('partials/new_table1.html', users=user_list)
 
 
 @app.route("/search")

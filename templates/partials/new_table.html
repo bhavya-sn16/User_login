@@ -57,15 +57,16 @@ x-init="start()">
       <td class="p-3 text-sm text-black-700 whitespace-nowrap">{{ user.created_by }}</td>
       <td class="p-3 text-sm text-black-700 whitespace-nowrap">{{ user.created_dt }}</td>
       <td class="p-3 text-sm text-black-700 whitespace-nowrap">
-        <a id="{{user.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true,title:$event.target.id})" :class="{'focus:outline-none': !usedKeyboard}" class="bg-indigo-500 hover:bg-indigo-400 h-10 text-white  text-1xl flex items-center justify-center"
+        <a id="{{user.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true,user_id:$event.target.id})" :class="{'focus:outline-none': !usedKeyboard}" class="bg-indigo-500 hover:bg-indigo-400 h-10 text-white  text-1xl flex items-center justify-center"
         class="btn btn-light" style="float: right;">Update</a></td>
   </tr>
  </tbody>
       </table>
+      {% endfor %}
       <section
 x-data="slideout()"
 x-cloak
-@open-menu.window="open = $event.detail.open"
+@open-menu.window="open = $event.detail.open; user_id=$event.detail.user_id"
 @keydown.window.tab="usedKeyboard = true"
 @keydown.escape="open = false"
 x-init="init()" style="position: absolute; z-index: 1000;">
@@ -88,7 +89,29 @@ x-init="init()" style="position: absolute; z-index: 1000;">
 <div>
     <div class="container-fluid">
 
-        
+    {% if user_id %} 
+    <form method="POST" action="/update/{{user_id}}" class="max-w-sm mx-auto">
+        <div class="mb-5">
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+            <input type="text" class="form-control" id="name" name="name" >
+        </div>
+        <div class="mb-5">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+            <input type="email" class="form-control" id="email" name="email" >
+        </div>
+        <div class="mb-5">
+            <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+            <input type="text" class="form-control" id="contactno" name="contactno">
+        </div>
+        <br>
+        <div >
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" hx-get="/reload" hx-trigger="keyup changed delay:500ms" hx-target="#results">Submit</button>
+        </div>
+        <br>
+        <div>
+        </div>
+    </form>
+    {% else %}   
     <form method = "POST" class="max-w-sm mx-auto" action="{{ url_for('add_user') }}" >
         <div class="mb-5">
             <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -110,15 +133,15 @@ x-init="init()" style="position: absolute; z-index: 1000;">
         <div>
         </div>
     </form>
-    
+    {% endif %}
 </div>
 </section>
-      {% endfor %}
+     
   </div>
   </div>
   </section>
-  <section
-  x-data="slideout()" @open-menu.window="open = $event.detail.open,user_id=$event.detail.user_id; if (user_id) { window.location.href = `/update/${user_id}` }" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
+  <!-- <section
+  x-data="slideout()" @open-menu.window-2="open = $event.detail.open,user_id=$event.detail.user_id; if (user_id) { window.location.href = `/update/${user_id}` }" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
       
       <div
           x-show.transition.opacity.duration.500="open"
@@ -163,7 +186,7 @@ x-init="init()" style="position: absolute; z-index: 1000;">
           
       </div>
       
-      </section>
+      </section> -->
   
   <script>
     function slideout() {

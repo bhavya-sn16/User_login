@@ -5,6 +5,11 @@ hx-swap="afterend">
     <td>{{ result.first_name }}</td>
     <td>{{ result.email }}</td>
     <td>{{ result.contact_no }}</td>
+    <td >{{ result.created_by }}</td>
+    <td>{{ result.created_dt }}</td>
+    <td class="p-3 text-sm text-black-700 whitespace-nowrap">
+        <a id="{{result.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true,user_id:$event.target.id})" :class="{'focus:outline-none': !usedKeyboard}" class="bg-indigo-500 hover:bg-indigo-400 h-10 text-white  text-1xl flex items-center justify-center"
+        class="btn btn-light" style="float: right;">Update</a></td>
 
 </tr>
 {% endfor %}

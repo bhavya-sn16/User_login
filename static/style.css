@@ -152,11 +152,12 @@
     #table1{
         margin-top: 7%;
         margin-left: 5%;
-        width: 1500px;;
+        width: 1300px;;
     }
 
     .table2{
-        width: 1500px;
+        width: 1300px;
     }
 
+    [x-cloak] { display: none; }
 
