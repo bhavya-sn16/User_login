@@ -72,7 +72,7 @@
           <div class="container-fluid">
             <template x-if=" userId ==='' ">
                 <!-- Add New User Form -->
-            <form method="POST" action="/contact"  x-ref="addForm" x-data="contactForm()"  @submit.prevent="submitForm1()" class="max-w-sm mx-auto">
+            <form method="POST" action="/contact"  x-ref="addForm" x-data="contactForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto">
                 <input type="hidden" name="user_id" :value="userId">
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -91,7 +91,7 @@
             </template>
             <template x-if="userId !== ''" >
             <!-- Update User Form -->
-            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitForm2()" class="max-w-sm mx-auto">
+            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
               <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                 <input type="text" class="form-control" id="name" name="name" x-model="name">
@@ -177,7 +177,7 @@ function slideout() {
 			})
         },
         submitForm2() {
-        alert("hey")
+        alert("haiii")
         this.message = ''
 
       const formData = {

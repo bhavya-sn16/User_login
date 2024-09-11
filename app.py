@@ -78,28 +78,34 @@ def add_user():
      return render_template('partials/_add.html', name= name, form = form )
 
 
-@app.route('/update/<int:user_id>',methods = ['GET','POST'])
-def update(user_id):
+@app.route('/update',methods = ['GET','POST'])
+def update():
     print("blablabla")
     form = AddUser()
-    name_to_update = User.query.get_or_404(user_id)
-    users = User.query.all()
-    print(f"Fetched user: {name_to_update}")
-    if request.method == "POST":
-        name_to_update.first_name = request.form["name"]
-        name_to_update.email = request.form["email"]
-        name_to_update.contact_no = request.form["contactno"]
-        try:
-            db.session.commit()
+    data = request.json
+    name = data.get('name')
+    email = data.get('email')
+    contactno = data.get('contactno')
+    print(f"Name: {name}, Email: {email}, Contact: {contactno}")
+    return jsonify({"message": "User data submitted successfully!"}), 200
+    # name_to_update = User.query.get_or_404(user_id)
+    # users = User.query.all()
+    # print(f"Fetched user: {name_to_update}")
+    # if request.method == "POST":
+    #     name_to_update.first_name = request.form["name"]
+    #     name_to_update.email = request.form["email"]
+    #     name_to_update.contact_no = request.form["contactno"]
+    #     try:
+    #         db.session.commit()
             
-            flash("User Updated")
-            return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
-        except:
-            flash("There is some kind of error")
-            return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
+    #         flash("User Updated")
+    #         return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
+    #     except:
+    #         flash("There is some kind of error")
+    #         return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
         
-    else:
-        return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
+    # else:
+    #     return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
 
 
 
