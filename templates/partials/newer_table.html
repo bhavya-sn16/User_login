@@ -14,7 +14,7 @@
 </head>
 <body>
 <div>
-  <section class="section">
+  <section class="section" id="section">
     <!-- Sidebar Toggle & Search -->
     <div id="table1">
       <div>
@@ -52,7 +52,7 @@
             <td class="p-3 text-sm text-black-700 whitespace-nowrap">{{ user.created_by }}</td>
             <td class="p-3 text-sm text-black-700 whitespace-nowrap">{{ user.created_dt }}</td>
             <td class="p-3 text-sm text-black-700 whitespace-nowrap">
-              <a id="{{user.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true, user_id: $event.target.id});"  class="btn btn-light" style="float: right;">Update</a>
+              <a id="{{user.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu-2', {open: true, user_id: $event.target.id});"  class="btn btn-light" style="float: right;">Update</a>
             </td>
           </tr>
           {% endfor %}
@@ -61,59 +61,72 @@
     </div>
 
     <!-- Sidebar Section -->
-    <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
+    <section x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
       <div x-show.transition.opacity.duration.500="open" @click="open = false" class="fixed inset-0 bg-black bg-opacity-25" style="background-color: rgb(195, 224, 250);"></div>
       <div class="fixed transition duration-300 right-0 top-0 transform w-full max-w-xs h-screen bg-gray-100 overflow-hidden" :class="{'translate-x-full': !open}">
         <button @click="open = false" x-ref="closeButton" class="fixed top-0 right-0 mr-4 mt-2 z-50">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <span x-text="userId"></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
-            <template x-if=" userId ==='' ">
-                <!-- Add New User Form -->
-            <form method="POST"  x-ref="addForm" @submit.prevent="submitForm()"  class="max-w-sm mx-auto">
-                <input type="hidden" name="user_id" :value="userId">
-                <div class="mb-5">
-                  <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" required>
-                </div>
-                <div class="mb-5">
-                  <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" required>
-                </div>
-                <div class="mb-5">
-                  <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                  <input type="text" class="form-control" id="contactno" name="contactno" required>
-                </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
-              </form>
-            </template>
-            <template x-if="userId !== ''" >
-            <!-- Update User Form -->
-            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitData" class="max-w-sm mx-auto">
+            <!-- Add New User Form -->
+            <form method="POST" action="{{ url_for('add_user') }}" class="max-w-sm mx-auto">
               <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name" x-model="name">
+                <input type="text" class="form-control" id="name" name="name" required>
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" class="form-control" id="email" name="email" x-model="email">
+                <input type="email" class="form-control" id="email" name="email" required>
               </div>
               <div class="mb-5">
                 <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                <input type="text" class="form-control" id="contactno" name="contactno" x-model="contactno">
+                <input type="text" class="form-control" id="contactno" name="contactno" required>
               </div>
-              <div>
-              <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
-            </div>
+              <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
             </form>
-        </template>
+            
           </div>
+        </div>
+      </div>
+    </section>
+  </section>
+</div>
+
+<section x-data="slideout1()" x-cloak
+ @open-menu-2.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
+    <div x-show.transition.opacity.duration.500="open" @click="open = false" class="fixed inset-0 bg-black bg-opacity-25" style="background-color: rgb(195, 224, 250);"></div>
+    <div class="fixed transition duration-300 right-0 top-0 transform w-full max-w-xs h-screen bg-gray-100 overflow-hidden" :class="{'translate-x-full': !open}">
+      <button @click="open = false" x-ref="closeButton" class="fixed top-0 right-0 mr-4 mt-2 z-50">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
+        <div class="container-fluid">
+
+          <!-- Update User Form -->
+          <form hx-post="/update/{{ user_id }}" hx-target="#section" class="max-w-sm mx-auto">
+            <div class="mb-5">
+              <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+              <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="mb-5">
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+              <input type="email" class="form-control" id="email" name="email">
+            </div>
+            <div class="mb-5">
+              <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
+              <input type="text" class="form-control" id="contactno" name="contactno">
+            </div>
+            <div>
+            <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
+           </div>    
+        </form>
+    
         </div>
       </div>
     </div>
   </section>
+</section>
 </div>
 
 <script>
@@ -121,58 +134,44 @@ function slideout() {
   return {
     open: false,
     usedKeyboard: false,
-    name : null,
-    email: null,
-    contact: null,
-    userId:'',
+    
     init() {
       this.$watch('open', value => {
         if (value) {
           this.$refs.closeButton.focus();
-          console.log('User ID:', user_id);
-          this.userId=user_id;
-          
-
         }
         this.toggleOverlay();
       });
     },
     toggleOverlay() {
       document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
-    },
-    contactForm() {
-     return {formData: {
-			name: 'Ann',
-			email: 'ann@gmail.com',
-			contactno: '7968541235'
-		},
-    
-    submitForm() {
-      const formData = {
-        name: 'riva',
-        email: 'riva@gmail.com',
-        contactno: '5648445215',
-        
-      };
-      fetch('/add_user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-      .then(() => {
-				this.message = 'Form sucessfully submitted!'
-			})
-			.catch(() => {
-				this.message = 'Ooops! Something went wrong!'
-			})
-        }}
+    }
   }
-}}
-
+}
 </script>
 
+<script>
+    function slideout1() {
+      return {
+        open: false,
+        usedKeyboard: false,
+        name : null,
+        email: null,
+        contact: null,
+        init() {
+          this.$watch('open', value => {
+            if (value) {
+              this.$refs.closeButton.focus();
+            }
+            this.toggleOverlay();
+          });
+        },
+        toggleOverlay() {
+          document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
+        }
+      }
+    }
+    </script>
 </body>
 
 {% endblock %}

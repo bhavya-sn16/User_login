@@ -41,31 +41,39 @@ class AddUser(FlaskForm):
 @app.route('/add_user',methods = ['GET','POST'])
 def add_user():
      print("***")
-     print("5555555")
-    #  name = None
      form = AddUser()
-     name= form.name.data
-     print(name)  
-     if request.method == 'POST':
-          user = User.query.filter_by(email = form.email.data).first()
-          print("bla")
-          if user is None:
-               user = User(first_name=form.name.data, email=form.email.data, contact_no= form.contactno.data,
-                             password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
-                             updated_by="Hogwarts")
-               db.session.add(user)
-               db.session.commit()
-               users = User.query.all()
-            #    users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
-               flash("User added successfully")
+     data = request.json
+     name = data.get('name')
+     email = data.get('email')
+     contactno = data.get('contactno')
+     print(f"Name: {name}, Email: {email}, Contact: {contactno}")
+     return jsonify({"message": "User data submitted successfully!"}), 200
+    
+    #  print("5555555")
+    # #  name = None
+    
+    #  name= form.name.data
+    #  print(name)  
+    #  if request.method == 'POST':
+    #       user = User.query.filter_by(email = form.email.data).first()
+    #       print("bla")
+    #       if user is None:
+    #            user = User(first_name=form.name.data, email=form.email.data, contact_no= form.contactno.data,
+    #                          password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
+    #                          updated_by="Hogwarts")
+    #            db.session.add(user)
+    #            db.session.commit()
+    #            users = User.query.all()
+    #         #    users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
+    #            flash("User added successfully")
                
-               return render_template('partials/new_table1.html',users = users)
-          else:
-             flash("User already exists")
+    #            return render_template('partials/new_table1.html',users = users)
+    #       else:
+    #          flash("User already exists")
 
-          form.name.data=''
-          form.email.data=''
-          form.contactno.data=''
+    #       form.name.data=''
+    #       form.email.data=''
+    #       form.contactno.data=''
 
      return render_template('partials/_add.html', name= name, form = form )
 
