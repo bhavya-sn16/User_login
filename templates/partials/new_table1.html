@@ -72,7 +72,7 @@
           <div class="container-fluid">
             <template x-if=" userId ==='' ">
                 <!-- Add New User Form -->
-            <form method="POST"  x-ref="addForm" @submit.prevent="submitForm()"  class="max-w-sm mx-auto">
+            <form method="POST" action="/contact"  x-ref="addForm" x-data="contactForm()"  @submit.prevent="submitForm1()" class="max-w-sm mx-auto">
                 <input type="hidden" name="user_id" :value="userId">
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -91,7 +91,7 @@
             </template>
             <template x-if="userId !== ''" >
             <!-- Update User Form -->
-            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitData" class="max-w-sm mx-auto">
+            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitForm2()" class="max-w-sm mx-auto">
               <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                 <input type="text" class="form-control" id="name" name="name" x-model="name">
@@ -142,15 +142,20 @@ function slideout() {
     },
     contactForm() {
         
-     return {formData: {
-			name: 'Ann',
-			email: 'ann@gmail.com',
-			contactno: '7968541235'
+        return {
+		formData: {
+			name: '',
+			email: '',
+			message: ''
 		},
-    
-    submitForm() {
+		message: '',
+
+
+        submitForm1() {
         alert("hey")
-      const formData = {
+        this.message = ''
+
+        const formData = {
         name: 'riva',
         email: 'riva@gmail.com',
         contactno: '5648445215',
@@ -170,7 +175,34 @@ function slideout() {
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
 			})
-        }}
+        },
+        submitForm2() {
+        alert("hey")
+        this.message = ''
+
+      const formData = {
+        name: 'riva',
+        email: 'riva@gmail.com',
+        contactno: '5648445215',
+        
+      };
+      fetch('/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        
+        body: JSON.stringify(formData),
+      })
+      .then(() => {
+				this.message = 'Form sucessfully submitted!'
+			})
+			.catch(() => {
+				this.message = 'Ooops! Something went wrong!'
+			})
+        }
+    
+    }
   }
 }}
 
