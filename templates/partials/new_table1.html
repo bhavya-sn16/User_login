@@ -141,6 +141,7 @@ function slideout() {
       document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
     },
     contactForm() {
+        
      return {formData: {
 			name: 'Ann',
 			email: 'ann@gmail.com',
@@ -148,6 +149,7 @@ function slideout() {
 		},
     
     submitForm() {
+        alert("hey")
       const formData = {
         name: 'riva',
         email: 'riva@gmail.com',
@@ -159,6 +161,7 @@ function slideout() {
         headers: {
           'Content-Type': 'application/json',
         },
+        
         body: JSON.stringify(formData),
       })
       .then(() => {
