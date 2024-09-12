@@ -24,7 +24,7 @@
             x-data="{usedKeyboard: false}"
             @keydown.window.tab="usedKeyboard = true"
             role="button"
-            @click="$dispatch('open-menu', { open: true, user_id:null})"
+            @click="$dispatch('open-menu', { open: true, user_id:'aa'})"
             :class="{'focus:outline-none': !usedKeyboard}"
             class="btn btn-light" style="float: right;">
             Add User
@@ -32,7 +32,7 @@
       </div>
 
       <!-- Table with user data -->
-      <table class="table2">
+      <table class="table2" id="results">
         <thead class="bg-gray-200 text-black-500">
           <tr class="bg-white-50">
             <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">First Name</th>
@@ -70,44 +70,48 @@
         <span x-text="userId"></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
-            <template x-if=" userId ==='' ">
+            <template x-if=" userId ==='aa' ">
+        
                 <!-- Add New User Form -->
-            <form method="POST" action="/contact"  x-ref="addForm" x-data="contactForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto">
-                <input type="hidden" name="user_id" :value="userId">
+            <form method="POST" action="/contact"  x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto">
+                
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" required>
+                  <input type="text" class="form-control" id="name" name="name" x-model="formData.name" required>
                 </div>
                 <div class="mb-5">
                   <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" required>
+                  <input type="email" class="form-control" id="email" name="email" x-model="formData.email" required>
                 </div>
                 <div class="mb-5">
                   <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                  <input type="text" class="form-control" id="contactno" name="contactno" required>
+                  <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno" required>
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" hx-get="/reload" hx-trigger="keyup changed delay:500ms" hx-target="#results">Submit</button>
               </form>
             </template>
-            <template x-if="userId !== ''" >
+            <template x-if="userId !== 'aa'" >
             <!-- Update User Form -->
-            <form method="POST" x-ref="updateForm"  action="/contact" x-data="contactForm()"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
-              <div class="mb-5">
+            
+            <form method="POST" x-ref="updateForm"  action="/contact" x-data="UpdateForm()"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
+                <input type="hidden" name="user_id" :value="userId" x-model="formData.userId">
+                <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name" x-model="name">
+                <input type="text" class="form-control" id="name" name="name" x-model="formData.name">
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" class="form-control" id="email" name="email" x-model="email">
+                <input type="email" class="form-control" id="email" name="email" x-model="formData.email">
               </div>
               <div class="mb-5">
                 <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                <input type="text" class="form-control" id="contactno" name="contactno" x-model="contactno">
+                <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno">
               </div>
               <div>
               <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
             </div>
             </form>
+            
         </template>
           </div>
         </div>
@@ -124,7 +128,7 @@ function slideout() {
     name : null,
     email: null,
     contact: null,
-    userId:'',
+    userId:'aa',
     init() {
       this.$watch('open', value => {
         if (value) {
@@ -140,7 +144,9 @@ function slideout() {
     toggleOverlay() {
       document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
     },
-    contactForm() {
+    
+}}
+function AddForm() {
         
         return {
 		formData: {
@@ -152,13 +158,14 @@ function slideout() {
 
 
         submitForm1() {
-        alert("hey")
+        
         this.message = ''
 
         const formData = {
-        name: 'riva',
-        email: 'riva@gmail.com',
-        contactno: '5648445215',
+            name: this.formData.name,
+        email: this.formData.email,
+        contactno: this.formData.contactno,
+        
         
       };
       fetch('/add_user', {
@@ -176,14 +183,30 @@ function slideout() {
 				this.message = 'Ooops! Something went wrong!'
 			})
         },
+        
+        }
+    
+    }
+  
+  function UpdateForm() {
+        
+        return {
+		formData: {
+			name: '',
+			email: '',
+			message: ''
+		},
+		message: '',
+
         submitForm2() {
-        alert("haiii")
+        
         this.message = ''
 
       const formData = {
-        name: 'riva',
-        email: 'riva@gmail.com',
-        contactno: '5648445215',
+        name: this.formData.name,
+        email: this.formData.email,
+        contactno: this.formData.contactno,
+        userId: this.formData.userId
         
       };
       fetch('/update', {
@@ -204,7 +227,6 @@ function slideout() {
     
     }
   }
-}}
 
 </script>
 

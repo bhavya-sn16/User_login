@@ -47,33 +47,29 @@ def add_user():
      email = data.get('email')
      contactno = data.get('contactno')
      print(f"Name: {name}, Email: {email}, Contact: {contactno}")
-     return jsonify({"message": "User data submitted successfully!"}), 200
     
-    #  print("5555555")
-    # #  name = None
-    
-    #  name= form.name.data
-    #  print(name)  
-    #  if request.method == 'POST':
-    #       user = User.query.filter_by(email = form.email.data).first()
-    #       print("bla")
-    #       if user is None:
-    #            user = User(first_name=form.name.data, email=form.email.data, contact_no= form.contactno.data,
-    #                          password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
-    #                          updated_by="Hogwarts")
-    #            db.session.add(user)
-    #            db.session.commit()
-    #            users = User.query.all()
-    #         #    users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
-    #            flash("User added successfully")
+     print("5555555")
+     if request.method == 'POST':
+          user = User.query.filter_by(email = email).first()
+          print("bla")
+          if user is None:
+               user = User(first_name=name, email=email, contact_no= contactno,
+                             password_hash="2222220",middle_name= "Bilius",last_name="Weasly",created_by="Arthur and Molly", 
+                             updated_by="Hogwarts")
+               print("you have not failed")
+               db.session.add(user)
+               db.session.commit()
+               users = User.query.all()
+               users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
+               flash("User added successfully")
                
-    #            return render_template('partials/new_table1.html',users = users)
-    #       else:
-    #          flash("User already exists")
+               return render_template('partials/new_table1.html',users = users)
+          else:
+             flash("User already exists")
 
-    #       form.name.data=''
-    #       form.email.data=''
-    #       form.contactno.data=''
+          form.name.data=''
+          form.email.data=''
+          form.contactno.data=''
 
      return render_template('partials/_add.html', name= name, form = form )
 
@@ -86,26 +82,27 @@ def update():
     name = data.get('name')
     email = data.get('email')
     contactno = data.get('contactno')
-    print(f"Name: {name}, Email: {email}, Contact: {contactno}")
-    return jsonify({"message": "User data submitted successfully!"}), 200
-    # name_to_update = User.query.get_or_404(user_id)
-    # users = User.query.all()
-    # print(f"Fetched user: {name_to_update}")
-    # if request.method == "POST":
-    #     name_to_update.first_name = request.form["name"]
-    #     name_to_update.email = request.form["email"]
-    #     name_to_update.contact_no = request.form["contactno"]
-    #     try:
-    #         db.session.commit()
+    user_id = data.get('userId')
+    print(f"Name: {name}, Email: {email}, Contact: {contactno}, UserId:{user_id}")
+    name_to_update = User.query.get_or_404(user_id)
+    users = User.query.all()
+    print(f"Fetched user: {name_to_update}")
+    if request.method == "POST":
+        print("trick")
+        name_to_update.first_name = name
+        name_to_update.email = email
+        name_to_update.contact_no = contactno
+        try:
+            db.session.commit()
             
-    #         flash("User Updated")
-    #         return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
-    #     except:
-    #         flash("There is some kind of error")
-    #         return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
+            flash("User Updated")
+            return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
+        except:
+            flash("There is some kind of error")
+            return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
         
-    # else:
-    #     return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
+    else:
+        return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
 
 
 
