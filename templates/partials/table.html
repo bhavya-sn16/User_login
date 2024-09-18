@@ -90,7 +90,7 @@
                   <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno" required>
                 </div>
                 <div class="mb-5">
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" value="myoption">Submit</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
                 </div>
                 <div class="mb-5">
                     <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"   >Close</button>
@@ -186,7 +186,8 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
-                if (event.target.value === 'myoption')
+                alert("dig")
+                 
                 { document.getElementById('span1').dispatch('open-menu', {open: true})
                  
         }})
