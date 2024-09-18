@@ -69,7 +69,7 @@
         </button>
         <span id="span1" hx-get= /reload
         
-        hx-target="#results" x-text="userId" @open-menu.window="open = $event.detail.open;"  ></span>
+        hx-target="#results" x-text="userId"  hx-trigger="user-update status:true" ></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
             <template x-if=" userId ==='aa' ">
@@ -189,7 +189,7 @@ function AddForm() {
                 
                 if (event.target.value === 'myoption') 
                 {   alert("dig")
-                    document.getElementById('span1').dispatch('open-menu', {open: false})
+                    document.getElementById('span1').$dispatch('user-update', { status: true})
                  
         }})
 			.catch(() => {
