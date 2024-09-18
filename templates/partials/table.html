@@ -69,7 +69,7 @@
         </button>
         <span id="span1" hx-get= /reload
         
-        hx-target="#results" x-text="userId" @open-menu.window="open = $event.detail.open;" ></span>
+        hx-target="#results" x-text="userId" @open-menu.window="open = $event.detail.open;"  ></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
             <template x-if=" userId ==='aa' ">
@@ -90,7 +90,7 @@
                   <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno" required>
                 </div>
                 <div class="mb-5">
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" value="myoption">Submit</button>
                 </div>
                 <div class="mb-5">
                     <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"   >Close</button>
@@ -186,9 +186,10 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
-                alert("dig")
-                 
-                { document.getElementById('span1').dispatch('open-menu', {open: true})
+                
+                if (event.target.value === 'myoption') 
+                {   alert("dig")
+                    document.getElementById('span1').dispatch('open-menu', {open: false})
                  
         }})
 			.catch(() => {
