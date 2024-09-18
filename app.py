@@ -36,6 +36,7 @@ class AddUser(FlaskForm):
     email = StringField("Enter e-mail id", validators=[DataRequired()])
     contactno =StringField("Your Contact number", validators=[DataRequired()])
     submit = SubmitField("Add", validators=[DataRequired()])
+    # submit = SubmitField("Close", validators=[DataRequired()])
 
 
 @app.route('/add_user',methods = ['GET','POST'])
@@ -63,7 +64,7 @@ def add_user():
                users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
                flash("User added successfully")
                
-               return render_template('partials/new_table1.html',users = users)
+               return render_template('partials/table.html',users = users)
           else:
              flash("User already exists")
 
@@ -96,13 +97,13 @@ def update():
             db.session.commit()
             
             flash("User Updated")
-            return render_template('partials/new_table1.html',users = users, name_to_update = name_to_update)
+            return render_template('partials/table.html',users = users, name_to_update = name_to_update)
         except:
             flash("There is some kind of error")
-            return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)
+            return render_template('partials/table.html',users = users, name_to_update= name_to_update)
         
     else:
-        return render_template('partials/new_table1.html',users = users, name_to_update= name_to_update)  
+        return render_template('partials/table.html',users = users, name_to_update= name_to_update)  
 
 
 
@@ -139,7 +140,7 @@ def login():
 # @login_required
 def users():
     user_list = User.query.all()
-    return render_template('partials/new_table1.html', users=user_list)
+    return render_template('partials/table.html', users=user_list)
 
 
 @app.route("/search")
@@ -157,9 +158,11 @@ def search():
 
 @app.route("/reload")
 def reload():
-   q = db.query(User).order_by(User.id)
-   results = q.all()
+#    q = db.query(User).order_by(User.user_id)
+#    results = q.all()
+   results = User.query.all()
    return render_template("search_results.html", results=results)
+#   return '<p>hii</p>'
 
 
 @app.route('/dashboard',methods=['GET', 'POST'] )

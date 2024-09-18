@@ -67,13 +67,13 @@
         <button @click="open = false" x-ref="closeButton" class="fixed top-0 right-0 mr-4 mt-2 z-50">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <span x-text="userId"></span>
+        <span x-text="userId" ></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
             <template x-if=" userId ==='aa' ">
         
                 <!-- Add New User Form -->
-            <form method="POST" action="/contact"  x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto">
+            <form method="POST" action="/contact"  x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto"  x-on:change={` if (event.target.value = 'myoption'){ document.querySelector('body').dispatchEvent(new Event('myevent'))}`} >
                 
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -87,14 +87,22 @@
                   <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
                   <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno" required>
                 </div>
-                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" hx-get="/reload" hx-trigger="keyup changed delay:500ms" hx-target="#results">Submit</button>
+                <div class="mb-5">
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+                </div>
+                <div class="mb-5">
+                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"  value="myoption" hx-get=/reload
+
+                    hx-target="#results" >Close</button>
+                </div>
               </form>
+              
             </template>
             <template x-if="userId !== 'aa'" >
             <!-- Update User Form -->
             
             <form method="POST" x-ref="updateForm"  action="/contact" x-data="UpdateForm()"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
-                <input type="hidden" name="user_id" :value="userId" x-model="formData.userId">
+                <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                 <input type="text" class="form-control" id="name" name="name" x-model="formData.name">
@@ -178,6 +186,7 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
+               
 			})
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
@@ -206,7 +215,7 @@ function AddForm() {
         name: this.formData.name,
         email: this.formData.email,
         contactno: this.formData.contactno,
-        userId: this.formData.userId
+        userId: this.userId
         
       };
       fetch('/update', {
@@ -219,6 +228,39 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
+                this.open = false
+			})
+			.catch(() => {
+				this.message = 'Ooops! Something went wrong!'
+			})
+        }
+    
+    }
+  }
+
+  function CloseForm() {
+        
+        return {
+		formData: {
+			name: '',
+			email: '',
+			message: ''
+		},
+		message: '',
+
+        closeForm1() {
+        
+      fetch('/reload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        
+        body: JSON.stringify(formData),
+      })
+      .then(() => {
+				this.message = 'Form sucessfully submitted!'
+                this.open = false
 			})
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
