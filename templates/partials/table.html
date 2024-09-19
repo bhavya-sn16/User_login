@@ -59,6 +59,9 @@
         </tbody>
       </table>
     </div>
+    <span id="span1" hx-get= /reload
+        
+        hx-target="#results" x-text="userId"  hx-trigger="user-update from:body"  ></span>
 
     <!-- Sidebar Section -->
     <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
@@ -67,9 +70,7 @@
         <button @click="open = false" x-ref="closeButton" class="fixed top-0 right-0 mr-4 mt-2 z-50">
           <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
-        <span id="span1" hx-get= /reload
         
-        hx-target="#results" x-text="userId"  hx-trigger="user-update status:true" ></span>
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
             <template x-if=" userId ==='aa' ">
@@ -116,7 +117,7 @@
                 <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno">
               </div>
               <div>
-              <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
+              <button type="submit" id="sub"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
             </div>
             </form>
             
@@ -186,12 +187,10 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
-                
-                if (event.target.value === 'myoption') 
-                {   alert("dig")
-                    document.getElementById('span1').$dispatch('user-update', { status: true})
+                document.getElementById('span1').$dispatch('user-update', { status: true})
+                document.getElementById("sub").addEventListener("click",$dispatch('open-menu', { open: false})) ;
                  
-        }})
+        })
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
 			})
