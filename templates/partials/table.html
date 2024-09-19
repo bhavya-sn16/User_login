@@ -104,7 +104,7 @@
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name" x-data="{name: $parent.name}"  x-model="formData.name" >
+                <input type="text" class="form-control" id="name" name="name" x-data="{firstname: $parent.name}"  x-model="formData.name" :placeholder="firstname" >
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
@@ -157,9 +157,9 @@ function slideout() {
         .then(response => response.json())
         .then(data => {
         
-            this.formData.name = data.name;
-      this.formData.email = data.email;
-      this.formData.contactno = data.contactno;
+            this.name = data.name;
+            this.email = data.email;
+            this.contactno = data.contactno;
             })
         .catch(err => {
           console.log("Error fetching user data:", err);
@@ -183,8 +183,8 @@ function AddForm() {
 
         const formData = {
             name: this.formData.name,
-        email: this.formData.email,
-        contactno: this.formData.contactno,
+            email: this.formData.email,
+            contactno: this.formData.contactno,
         
         
       };
