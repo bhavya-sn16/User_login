@@ -160,9 +160,25 @@ def search():
 def reload():
 #    q = db.query(User).order_by(User.user_id)
 #    results = q.all()
+   
    results = User.query.all()
    return render_template("search_results.html", results=results)
 #   return '<p>hii</p>'
+
+@app.route('/get_user_data/<user_id>', methods=['GET'])
+def get_user_data(user_id):
+    # Fetch user from the database based on user_id
+    user = User.query.get_or_404(user_id)
+    
+    if user:
+        print("Pudding....")
+        return jsonify({
+            'name': user.first_name,
+            'email': user.email,
+            'contactno': user.contact_no
+        })
+    else:
+        return jsonify({'error': 'User not found'}), 404
 
 
 @app.route('/dashboard',methods=['GET', 'POST'] )

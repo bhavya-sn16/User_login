@@ -61,7 +61,7 @@
     </div>
     <span id="span1" hx-get= /reload
         
-        hx-target="#results" x-text="userId"  hx-trigger="user-update from:body"  ></span>
+        hx-target="#results"   hx-trigger="user-update from:body" x-data="message" ></span>
 
     <!-- Sidebar Section -->
     <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
@@ -80,7 +80,7 @@
                 
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" x-model="formData.name" required>
+                  <input type="text" class="form-control" id="name" name="name"  x-model="formData.name" required>
                 </div>
                 <div class="mb-5">
                   <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
@@ -93,9 +93,7 @@
                 <div class="mb-5">
                 <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" value="myoption">Submit</button>
                 </div>
-                <div class="mb-5">
-                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"   >Close</button>
-                </div>
+               
               </form>
               
             </template>
@@ -106,7 +104,7 @@
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name" x-model="formData.name">
+                <input type="text" class="form-control" id="name" name="name" x-data="{name: $parent.name}" placeholder="formData.name" x-model="formData.name">
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
@@ -144,17 +142,35 @@ function slideout() {
           this.$refs.closeButton.focus();
           console.log('User ID:', user_id);
           this.userId=user_id;
-          
-
         }
+        if (this.userId) {
+            this.fetchUserData(this.userId); 
+          }
         this.toggleOverlay();
       });
     },
     toggleOverlay() {
       document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
     },
+    fetchUserData(userId) {
+      fetch(`/get_user_data/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+         
+          
+            this.name=data.name,
+            this.email= data.email,
+            this.contactno=data.contactno
+            
+            
+          
+          
+        })
+        .catch(err => {
+          console.log("Error fetching user data:", err);
+        });
     
-}}
+}}}
 function AddForm() {
         
         return {
@@ -187,8 +203,9 @@ function AddForm() {
       })
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
-                document.getElementById('span1').$dispatch('user-update', { status: true})
-                document.getElementById("sub").addEventListener("click",$dispatch('open-menu', { open: false})) ;
+                this.open = false
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
+                alert(message)
                  
         })
 			.catch(() => {
@@ -232,6 +249,7 @@ function AddForm() {
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
                 this.open = false
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
 			})
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
