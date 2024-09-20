@@ -1,7 +1,5 @@
 {% for result in results %}
-<tr  hx-get="/contacts/?page=2"
-hx-trigger="revealed"
-hx-swap="afterend">
+<tr>
     <td>{{ result.first_name }}</td>
     <td>{{ result.email }}</td>
     <td>{{ result.contact_no }}</td>

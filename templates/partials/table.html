@@ -59,9 +59,7 @@
         </tbody>
       </table>
     </div>
-    <span id="span1" hx-get= /reload
-        
-        hx-target="#results"   hx-trigger="user-update from:body" x-data="message" ></span>
+    <span id="span1" hx-get= /reload hx-target="#results"   hx-trigger="user-update from:body" ></span>
 
     <!-- Sidebar Section -->
     <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
@@ -101,7 +99,6 @@
             <!-- Update User Form -->
             
             <form method="POST"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
-                <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
               <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
                 <input type="text" class="form-control" id="name" name="name"   x-model="name"  >
@@ -240,7 +237,7 @@ function AddForm() {
 				this.message = 'Form sucessfully submitted!'
                 this.open = false
                 document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
-                alert(message)
+                //alert(message)
                  
         })
 			.catch(() => {
