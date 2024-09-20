@@ -100,7 +100,7 @@
             <template x-if="userId !== 'aa'" >
             <!-- Update User Form -->
             
-            <form method="POST" x-ref="updateForm"  action="/contact" x-data="slideout()" @submit.prevent="submitForm2" class="max-w-sm mx-auto">
+            <form method="POST" x-ref="updateForm"  action="/contact" @submit.prevent="submitForm2" class="max-w-sm mx-auto">
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -108,11 +108,11 @@
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" class="form-control" id="email" name="email" x-model="formData.email">
+                <input type="email" class="form-control" id="email" name="email" x-model="this.email">
               </div>
               <div class="mb-5">
                 <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                <input type="text" class="form-control" id="contactno" name="contactno" x-model="formData.contactno">
+                <input type="text" class="form-control" id="contactno" name="contactno" x-model="this.contactno">
               </div>
               <div>
               <button type="submit" id="sub"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
@@ -148,15 +148,17 @@ function slideout() {
           }
         this.toggleOverlay();
       });
-      submitForm2()
+     
+    },
+    submitForm2()
          {
         
         this.message = ''
 
       const formData = {
-        name: this.formData.name,
-        email: this.formData.email,
-        contactno: this.formData.contactno,
+        name: this.name,
+        email: this.email,
+        contactno: this.contactno,
         userId: this.userId
         
       };
@@ -176,8 +178,7 @@ function slideout() {
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
 			})
-        }
-    },
+        },
     toggleOverlay() {
       document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
     },
