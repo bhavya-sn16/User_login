@@ -104,7 +104,7 @@
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name" x-data="{firstname: $parent.name}"  x-model="formData.name" :placeholder="firstname" >
+                <input type="text" class="form-control" id="name" name="name"   x-model="formData.name" :placeholder="formData.name" >
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
@@ -135,8 +135,18 @@ function slideout() {
     name : null,
     email: null,
     contact: null,
-    userId:'aa',
-    init() {
+    userId:'aa'}
+    
+        function UpdateForm() {
+        
+        return {
+		formData: {
+			name: '',
+			email: '',
+			message: ''
+		},
+		message: '',
+        init() {
       this.$watch('open', value => {
         if (value) {
           this.$refs.closeButton.focus();
@@ -156,7 +166,7 @@ function slideout() {
       fetch(`/get_user_data/${userId}`)
         .then(response => response.json())
         .then(data => {
-        
+            
             this.name = data.name;
             this.email = data.email;
             this.contactno = data.contactno;
@@ -164,8 +174,41 @@ function slideout() {
         .catch(err => {
           console.log("Error fetching user data:", err);
         });
+
+        submitForm2() 
+        {
+        
+        this.message = ''
+
+      const formData = {
+        name: this.formData.name,
+        email: this.formData.email,
+        contactno: this.formData.contactno,
+        userId: this.userId
+        
+      };
+      fetch('/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        
+        body: JSON.stringify(formData),
+      })
+      .then(() => {
+				this.message = 'Form sucessfully submitted!'
+                this.open = false
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
+			})
+			.catch(() => {
+				this.message = 'Ooops! Something went wrong!'
+			})
+        }
     
-}}}
+    }
+  }
+    
+}}
 function AddForm() {
         
         return {
@@ -212,47 +255,7 @@ function AddForm() {
     
     }
   
-  function UpdateForm() {
-        
-        return {
-		formData: {
-			name: '',
-			email: '',
-			message: ''
-		},
-		message: '',
-
-        submitForm2() {
-        
-        this.message = ''
-
-      const formData = {
-        name: this.formData.name,
-        email: this.formData.email,
-        contactno: this.formData.contactno,
-        userId: this.userId
-        
-      };
-      fetch('/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        
-        body: JSON.stringify(formData),
-      })
-      .then(() => {
-				this.message = 'Form sucessfully submitted!'
-                this.open = false
-                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
-			})
-			.catch(() => {
-				this.message = 'Ooops! Something went wrong!'
-			})
-        }
-    
-    }
-  }
+  
 
   function CloseForm() {
         
