@@ -76,7 +76,7 @@
             <template x-if=" userId ==='aa' ">
         
                 <!-- Add New User Form -->
-            <form method="POST" action="/contact"  x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto" >
+            <form method="POST"   x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto" >
                 
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -100,19 +100,19 @@
             <template x-if="userId !== 'aa'" >
             <!-- Update User Form -->
             
-            <form method="POST" x-ref="updateForm"  action="/contact" @submit.prevent="submitForm2" class="max-w-sm mx-auto">
+            <form method="POST"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
-                <div class="mb-5">
+              <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name"   x-model="this.name"  >
+                <input type="text" class="form-control" id="name" name="name"   x-model="name"  >
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" class="form-control" id="email" name="email" x-model="this.email">
+                <input type="email" class="form-control" id="email" name="email" x-model="email">
               </div>
               <div class="mb-5">
                 <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                <input type="text" class="form-control" id="contactno" name="contactno" x-model="this.contactno">
+                <input type="text" class="form-control" id="contactno" name="contactno" x-model="contactno">
               </div>
               <div>
               <button type="submit" id="sub"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
