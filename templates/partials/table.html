@@ -100,7 +100,7 @@
             <template x-if="userId !== 'aa'" >
             <!-- Update User Form -->
             
-            <form method="POST" x-ref="updateForm"  action="/contact"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
+            <form method="POST" x-ref="updateForm"  action="/contact" x-data="slideout()" @submit.prevent="submitForm2" class="max-w-sm mx-auto">
                 <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
                 <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -148,24 +148,7 @@ function slideout() {
           }
         this.toggleOverlay();
       });
-    },
-    toggleOverlay() {
-      document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
-    },
-    fetchUserData(userId) {
-      fetch(`/get_user_data/${userId}`)
-        .then(response => response.json())
-        .then(data => {
-        
-            this.name = data.name;
-            this.email = data.email;
-            this.contactno = data.contactno;
-            console.log(this.name)
-            })
-        .catch(err => {
-          console.log("Error fetching user data:", err);
-        });
-        submitForm2()
+      submitForm2()
          {
         
         this.message = ''
@@ -194,6 +177,26 @@ function slideout() {
 				this.message = 'Ooops! Something went wrong!'
 			})
         }
+    },
+    toggleOverlay() {
+      document.body.classList[this.open ? 'add' : 'remove']('h-screen', 'overflow-hidden');
+    },
+    fetchUserData(userId) {
+      fetch(`/get_user_data/${userId}`)
+        .then(response => response.json())
+        .then(data => {
+        
+            this.name = data.name;
+            this.email = data.email;
+            this.contactno = data.contactno;
+            console.log(this.name)
+            console.log(this.email)
+            console.log(this.contactno)
+            })
+        .catch(err => {
+          console.log("Error fetching user data:", err);
+        });
+        
     
     }
 
