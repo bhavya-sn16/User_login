@@ -156,6 +156,22 @@ def search():
 
     return render_template("search_results.html", results=results)
 
+@app.route('/delete/<int:id>')
+def delete(id):
+    user_to_delete = User.query.get_or_404(id)
+    name = None
+    try:
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("User Deleted")
+        users = User.query.all()
+        return render_template('partials/table.html', name= name, users = users)
+    except:
+        flash("There was a problem")
+        users = User.query.all()
+        return render_template('partials/table.html',  name= name, users = users)
+
+
 @app.route("/reload")
 def reload():
 #    q = db.query(User).order_by(User.user_id)

@@ -1,4 +1,19 @@
+
+
+<thead class="bg-gray-200 text-black-500">
+  <tr class="bg-white-50">
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">First Name</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Email</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Contact Number</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Created By</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Created On</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Update</th>
+    <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Delete</th>
+  </tr>
+</thead>
 {% for result in results %}
+
+<tbody class="divide-y divide-white-100">
 <tr  hx-get="/contacts/?page=2"
 hx-trigger="revealed"
 hx-swap="afterend">
@@ -9,7 +24,12 @@ hx-swap="afterend">
     <td>{{ result.created_dt }}</td>
     <td class="p-3 text-sm text-black-700 whitespace-nowrap">
         <a id="{{result.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true, user_id: $event.target.id});"  class="btn btn-light" style="float: right;">Update</a>
-      </td>
+    </td>
+    <td class="p-3 text-sm text-black-700 whitespace-nowrap">
+        <a id="{{result.user_id}}" name="{{result.first_name}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu-2', {open: true, user_id: $event.target.id, name : $event.target.name});"  class="btn btn-light" style="float: right;">Delete</a>
+    </td>
 
 </tr>
+</tbody>
+
 {% endfor %}

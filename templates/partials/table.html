@@ -14,6 +14,18 @@
 </head>
 <body>
 <div>
+
+  <div x-data="{ show: false, message: '' }" x-init="
+  document.addEventListener('user-update', (event) => {
+    message = event.detail.message;
+    show = true;
+    setTimeout(() => show = false, 3000);  
+  });
+" x-show="show" class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50">
+  <p x-text="message"></p>
+</div>
+
+
   <section class="section">
     <!-- Sidebar Toggle & Search -->
     <div id="table1">
@@ -24,12 +36,16 @@
             x-data="{usedKeyboard: false}"
             @keydown.window.tab="usedKeyboard = true"
             role="button"
-            @click="$dispatch('open-menu', { open: true, user_id:'aa'})"
+            @click="$dispatch('open-menu', { open: true, user_id:''})"
             :class="{'focus:outline-none': !usedKeyboard}"
             class="btn btn-light" style="float: right;">
             Add User
         </button>
       </div>
+      <br>
+      <br>
+      <br>
+      <br>
 
       <!-- Table with user data -->
       <table class="table2" id="results">
@@ -41,6 +57,7 @@
             <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Created By</th>
             <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Created On</th>
             <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Update</th>
+            <th class="w-24 p-3 text-sm font-bold tracking-wide text-left">Delete</th>
           </tr>
         </thead>
         <tbody id="results" class="divide-y divide-white-100">
@@ -54,14 +71,38 @@
             <td class="p-3 text-sm text-black-700 whitespace-nowrap">
               <a id="{{user.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true, user_id: $event.target.id});"  class="btn btn-light" style="float: right;">Update</a>
             </td>
+            <td class="p-3 text-sm text-black-700 whitespace-nowrap">
+              <a id="{{user.user_id}}" name="{{user.first_name}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu-2', {open: true, user_id: $event.target.id, name : $event.target.name});"  class="btn btn-light" style="float: right;">Delete</a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
-      </table>
+      </table> 
     </div>
-    <span id="span1" hx-get= /reload
-        
-        hx-target="#results"   hx-trigger="user-update from:body" x-data="message" ></span>
+    <div >
+    <span id="span1" hx-get= /reload hx-target="#results"   hx-trigger="user-update from:body" ></span>
+    </div>
+
+    <div x-data="messageBox()" x-cloak @open-menu-2.window="open = $event.detail.open, user_id = $event.detail.user_id, name = $event.detail.name;" x-init="init()" style="position: absolute; z-index: 1000;">
+      <div x-show.transition.opacity.duration.500="open" @click="open = false" class="fixed inset-0 bg-black bg-opacity-25"></div>
+      
+      <!-- Message Box Content -->
+      <div class="fixed transition duration-300 right-0 top-0 transform w-full max-w-xs h-auto bg-white shadow-lg rounded-lg p-6" :class="{'translate-x-full': !open}">
+        <button @click="open = false" x-ref="closeButton" class="absolute top-2 right-2 z-50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+    
+        <!-- Display dynamic message -->
+        <div class="mt-4 text-center">
+          <p class="text-lg font-semibold">User name: <span x-text="name"></span></p>
+          <p class="text-sm">Would you like to Delete this user's information?</p>
+          
+          <div class="mt-4">
+            <button type="submit" @click="deleteForm"  class="bg-blue-500 text-white px-4 py-2 rounded">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Sidebar Section -->
     <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
@@ -73,10 +114,10 @@
         
         <div class="p-16 px-6 absolute top-0 h-full overflow-y-scroll" id="part" style="float: right;">
           <div class="container-fluid">
-            <template x-if=" userId ==='aa' ">
+            <template x-if=" userId ==='' ">
         
                 <!-- Add New User Form -->
-            <form method="POST" action="/contact"  x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto" >
+            <form method="POST"   x-ref="addForm" x-data="AddForm()"  @submit.prevent="submitForm1" class="max-w-sm mx-auto" >
                 
                 <div class="mb-5">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
@@ -97,22 +138,21 @@
               </form>
               
             </template>
-            <template x-if="userId !== 'aa'" >
+            <template x-if="userId !== ''" >
             <!-- Update User Form -->
             
-            <form method="POST" x-ref="updateForm"  action="/contact" @submit.prevent="submitForm2" class="max-w-sm mx-auto">
-                <input type="hidden" name="user_id" x-model="formData.userId" x-data="{user_id: $parent.userId}">
-                <div class="mb-5">
+            <form method="POST"  @submit.prevent="submitForm2" class="max-w-sm mx-auto">
+              <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-                <input type="text" class="form-control" id="name" name="name"   x-model="this.name"  >
+                <input type="text" class="form-control" id="name" name="name"   x-model="name"  >
               </div>
               <div class="mb-5">
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                <input type="email" class="form-control" id="email" name="email" x-model="this.email">
+                <input type="email" class="form-control" id="email" name="email" x-model="email">
               </div>
               <div class="mb-5">
                 <label for="contactno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contact Number</label>
-                <input type="text" class="form-control" id="contactno" name="contactno" x-model="this.contactno">
+                <input type="text" class="form-control" id="contactno" name="contactno" x-model="contactno">
               </div>
               <div>
               <button type="submit" id="sub"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5">Submit</button>
@@ -135,7 +175,7 @@ function slideout() {
     name : null,
     email: null,
     contact: null,
-    userId:'aa',
+    userId:'',
     init() {
       this.$watch('open', value => {
         if (value) {
@@ -174,6 +214,9 @@ function slideout() {
 				this.message = 'Form sucessfully submitted!'
                 this.open = false
                 document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
+                
+                
+
 			})
 			.catch(() => {
 				this.message = 'Ooops! Something went wrong!'
@@ -239,8 +282,8 @@ function AddForm() {
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
                 this.open = false
-                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
-                alert(message)
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true, message: this.message } }));
+                //alert(message)
                  
         })
 			.catch(() => {
@@ -252,7 +295,42 @@ function AddForm() {
     
     }
   
-  
+    function messageBox() {
+  return {
+    open: false,
+    user_id: '',
+    name: '',
+    init() {
+      this.userId=user_id;
+      this.$watch('open', value => {
+        if (value) {
+          this.$refs.closeButton.focus();
+          // Custom logic if needed for when the message box opens
+        }
+
+      });
+    },
+    deleteForm()
+    {
+      
+      console.log("something")
+      console.log(this.user_id)
+      fetch(`/delete/${this.user_id}`)
+      .then(() => {
+				this.message = 'Form sucessfully submitted!'
+                this.open = false
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true, message: this.message } }));
+                
+
+			})
+			.catch(() => {
+				this.message = 'Ooops! Something went wrong!'
+			})
+        
+    }
+    
+  }
+}
 
   
 </script>
