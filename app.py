@@ -70,7 +70,7 @@ def add_user():
             }), 200
           else:
                 return jsonify({
-                "message": "User added successfully",
+                "message": "Mail already exists",
                 "users": user_data
             }), 200
 
