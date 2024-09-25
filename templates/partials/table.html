@@ -79,30 +79,9 @@
         </tbody>
       </table> 
     </div>
-    <div >
-    <span id="span1" hx-get= /reload hx-target="#results"   hx-trigger="user-update from:body" ></span>
-    </div>
-
-    <div x-data="messageBox()" x-cloak @open-menu-2.window="open = $event.detail.open, user_id = $event.detail.user_id, name = $event.detail.name;" x-init="init()" style="position: absolute; z-index: 1000;">
-      <div x-show.transition.opacity.duration.500="open" @click="open = false" class="fixed inset-0 bg-black bg-opacity-25"></div>
-      
-      <!-- Message Box Content -->
-      <div class="fixed transition duration-300 right-0 top-0 transform w-full max-w-xs h-auto bg-white shadow-lg rounded-lg p-6" :class="{'translate-x-full': !open}">
-        <button @click="open = false" x-ref="closeButton" class="absolute top-2 right-2 z-50">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-    
-        <!-- Display dynamic message -->
-        <div class="mt-4 text-center">
-          <p class="text-lg font-semibold">User name: <span x-text="name"></span></p>
-          <p class="text-sm">Would you like to Delete this user's information?</p>
-          
-          <div class="mt-4">
-            <button type="submit" @click="deleteForm"  class="bg-blue-500 text-white px-4 py-2 rounded">Yes</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <span id="span1" hx-get= /reload
+        
+        hx-target="#results"   hx-trigger="user-update from:body" x-data="message" ></span>
 
     <!-- Sidebar Section -->
     <div x-data="slideout()" x-cloak @open-menu.window="open = $event.detail.open, user_id = $event.detail.user_id;" @keydown.window.tab="usedKeyboard = true" @keydown.escape="open = false" x-init="init()" style="position: absolute; z-index: 1000;">
@@ -282,8 +261,8 @@ function AddForm() {
       .then(() => {
 				this.message = 'Form sucessfully submitted!'
                 this.open = false
-                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true, message: this.message } }));
-                //alert(message)
+                document.querySelector('body').dispatchEvent(new CustomEvent('user-update', { bubbles: true, detail: { status: true } }));
+                alert(message)
                  
         })
 			.catch(() => {
