@@ -61,18 +61,20 @@ def add_user():
                db.session.add(user)
                db.session.commit()
                users = User.query.all()
-               users = [{"first_name": User.first_name, "email": User.email, "contact_no": User.contact_no}]
-               flash("User added successfully")
-               
-               return render_template('partials/table.html',users = users)
+               user_data = [
+                {"first_name": user.first_name, "email": user.email, "contact_no": user.contact_no} for user in users
+            ]
+               return jsonify({
+                "message": "User added successfully",
+                "users": user_data
+            }), 200
           else:
-             flash("User already exists")
+                return jsonify({
+                "message": "User added successfully",
+                "users": user_data
+            }), 200
 
-          form.name.data=''
-          form.email.data=''
-          form.contactno.data=''
-
-     return render_template('partials/_add.html', name= name, form = form )
+     return render_template('partials/_add.html', form = form )
 
 
 @app.route('/update',methods = ['GET','POST'])
