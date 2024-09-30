@@ -154,16 +154,15 @@ def search():
 @app.route('/sorting', methods=['GET'])
 def sorting():
     
-    sort_by = request.args.get('sort_by', 'first_name')  
-    order = request.args.get('order', 'asc')  
-    
-    
+    sort_by = request.args.get('sort_by', 'first_name')
+    order = request.args.get('order', 'asc')
+
+   
     if order == 'asc':
-        print("sorting....")
         users = User.query.order_by(getattr(User, sort_by).asc()).all()
     else:
         users = User.query.order_by(getattr(User, sort_by).desc()).all()
-    
+
     return render_template('partials/table.html', users=users)
 
 # @app.route('/load_more', methods=['GET'])
