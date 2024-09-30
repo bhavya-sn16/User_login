@@ -64,15 +64,9 @@ def add_user():
                user_data = [
                 {"first_name": user.first_name, "email": user.email, "contact_no": user.contact_no} for user in users
             ]
-               return jsonify({
-                "message": "User added successfully",
-                "users": user_data
-            }), 200
+               return jsonify({"message": "User added successfully"}), 200
           else:
-                return jsonify({
-                "message": "Mail already exists",
-                "users": user_data
-            }), 200
+                return jsonify({"message": "User with this email already exists!"}), 409
 
      return render_template('partials/_add.html', form = form )
 
@@ -157,6 +151,31 @@ def search():
         results = []
 
     return render_template("search_results.html", results=results)
+@app.route('/sorting', methods=['GET'])
+def sorting():
+    
+    sort_by = request.args.get('sort_by', 'first_name')  
+    order = request.args.get('order', 'asc')  
+    
+    
+    if order == 'asc':
+        print("sorting....")
+        users = User.query.order_by(getattr(User, sort_by).asc()).all()
+    else:
+        users = User.query.order_by(getattr(User, sort_by).desc()).all()
+    
+    return render_template('partials/table.html', users=users)
+
+# @app.route('/load_more', methods=['GET'])
+# def load_more():
+#     page = request.args.get('page', 1, type=int)  
+#     per_page = 10  
+    
+#     paginated_users = User.query.paginate(page=page, per_page=per_page, error_out=False)
+    
+#     users = paginated_users.items 
+#     return render_template('partials/table.html', users=users)
+
 
 @app.route('/delete/<int:id>')
 def delete(id):
