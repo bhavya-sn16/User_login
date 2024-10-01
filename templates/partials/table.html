@@ -71,12 +71,12 @@
       <br>
 
       <!-- Table with user data -->
-      <table class="table-sortable" >
+      <table class="table-sortable w-full" >
         <thead class="bg-gray-200 text-black-500">
 
           <tr class="bg-white-50">
-            <th class="px-4 py-2">
-              <a hx-get="/sorting?sort_by=first_name&order=asc" hx-trigger="click" hx-target="#results" hx-swap="outerHTML">
+            <th class="w-24 px-1 py-0.5 text-sm font-bold tracking-wide text-left border-b border-gray-300 rounded-none">
+              <a hx-get="/sorting?sort_by=first_name&order=asc" hx-trigger="click" hx-target="#results" hx-swap="innerHTML">
                   Name
                   <span id="sort-icon">
                       <!-- Up icon for ascending -->
@@ -85,7 +85,7 @@
                       </svg>
                   </span>
               </a>
-              <a hx-get="/sorting?sort_by=first_name&order=desc" hx-trigger="click" hx-target="#results" hx-swap="outerHTML">
+              <a hx-get="/sorting?sort_by=first_name&order=desc" hx-trigger="click" hx-target="#results" hx-swap="innerHTML">
                   <span id="sort-icon">
                       <!-- Down icon for descending -->
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -118,9 +118,6 @@
             </td>
           </tr>
           {% endfor %}
-          <tr hx-get="/load_more?page=2" hx-trigger="revealed" hx-swap="afterend" class="bg-white-50">
-            <td colspan="6" class="text-center py-2">Loading more...</td>
-          </tr>
         </tbody>
       </table> 
     </div>
