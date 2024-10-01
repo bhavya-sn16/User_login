@@ -9,8 +9,6 @@ hx-swap="afterend" class="bg-white-200" >
     <td class="px-1 py-0.5 text-sm text-black-700 whitespace-nowrap">{{ result.created_dt }}</td>
     <td class="px-1 py-0.5 text-sm text-black-700 whitespace-nowrap">
         <a id="{{result.user_id}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu', {open: true, user_id: $event.target.id});"  class="btn btn-light px-1 py-0.5 text-sm" style="float: right;">Update</a>
-    </td>
-    <td class="p-3 text-sm text-black-700 whitespace-nowrap">
         <a id="{{result.user_id}}" name="{{result.first_name}}" x-data="{usedKeyboard: false}" @keydown.window.tab="usedKeyboard = true" role="button" @click="$dispatch('open-menu-2', {open: true, user_id: $event.target.id, name : $event.target.name});"  class="btn btn-light px-1 py-0.5 text-sm" style="float: right;">Delete</a>
     </td>
 
