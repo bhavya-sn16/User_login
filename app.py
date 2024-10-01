@@ -153,17 +153,20 @@ def search():
     return render_template("search_results.html", results=results)
 @app.route('/sorting', methods=['GET'])
 def sorting():
+
+    print("avada kadavra")
     
     sort_by = request.args.get('sort_by', 'first_name')
     order = request.args.get('order', 'asc')
 
-   
     if order == 'asc':
-        users = User.query.order_by(getattr(User, sort_by).asc()).all()
+        results = User.query.order_by(getattr(User, sort_by).asc()).all()
     else:
-        users = User.query.order_by(getattr(User, sort_by).desc()).all()
+        results = User.query.order_by(getattr(User, sort_by).desc()).all()
+    
 
-    return render_template('partials/table.html', users=users)
+
+    return render_template("search_results.html", results=results, order = order)
 
 # @app.route('/load_more', methods=['GET'])
 # def load_more():
